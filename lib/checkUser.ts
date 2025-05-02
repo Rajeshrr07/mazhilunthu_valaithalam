@@ -4,6 +4,7 @@ import { db } from "./prisma";
 export const checkUser = async () => {
   const user = await currentUser();
 
+
   if (!user) {
     return null;
   }
@@ -31,7 +32,7 @@ export const checkUser = async () => {
     });
 
     return newUser;
-  } catch (error) {
-    console.log(error.message);
+  } catch (error:any) {
+    console.log("Error:", error.message);
   }
 };
