@@ -5,6 +5,47 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { serializeCarData } from "@/lib/helper";
 
+// Types
+interface TestDriveBooking {
+  id: string;
+  carId: string;
+  userId: string;
+  bookingDate: Date;
+  startTime: string;
+  endTime: string;
+  notes: string | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  car?: any; // Serialized car data
+}
+
+interface BookTestDriveInput {
+  carId: string;
+  bookingDate: string;
+  startTime: string;
+  endTime: string;
+  notes?: string;
+}
+
+interface BookTestDriveResponse {
+  success: boolean;
+  data?: TestDriveBooking;
+  error?: string;
+}
+
+interface GetUserTestDrivesResponse {
+  success: boolean;
+  data?: any[];
+  error?: string;
+}
+
+interface CancelTestDriveResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
 /**
  * Books a test drive for a car
  */
@@ -14,7 +55,7 @@ export async function bookTestDrive({
   startTime,
   endTime,
   notes,
-}) {
+}: BookTestDriveInput): Promise<BookTestDriveResponse> {
   try {
     // Authenticate user
     const { userId } = await auth();
@@ -29,10 +70,12 @@ export async function bookTestDrive({
 
     // Check if car exists and is available
     const car = await db.car.findUnique({
-      where: { id: carId, status: "AVAILABLE" },
+      where: { id: carId },
     });
 
-    if (!car) throw new Error("Car not available for test drive");
+    if (!car || car.status !== "AVAILABLE") {
+      throw new Error("Car not available for test drive");
+    }
 
     // Check if slot is already booked
     const existingBooking = await db.testDriveBooking.findFirst({
@@ -71,7 +114,7 @@ export async function bookTestDrive({
       success: true,
       data: booking,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error booking test drive:", error);
     return {
       success: false,
@@ -83,7 +126,7 @@ export async function bookTestDrive({
 /**
  * Get user's test drive bookings - reservations page
  */
-export async function getUserTestDrives() {
+export async function getUserTestDrives(): Promise<GetUserTestDrivesResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -115,7 +158,7 @@ export async function getUserTestDrives() {
     });
 
     // Format the bookings
-    const formattedBookings = bookings.map((booking) => ({
+    const formattedBookings = bookings.map((booking:any) => ({
       id: booking.id,
       carId: booking.carId,
       car: serializeCarData(booking.car),
@@ -132,7 +175,7 @@ export async function getUserTestDrives() {
       success: true,
       data: formattedBookings,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching test drives:", error);
     return {
       success: false,
@@ -144,7 +187,9 @@ export async function getUserTestDrives() {
 /**
  * Cancel a test drive booking
  */
-export async function cancelTestDrive(bookingId) {
+export async function cancelTestDrive(
+  bookingId: string
+): Promise<CancelTestDriveResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -178,8 +223,8 @@ export async function cancelTestDrive(bookingId) {
       };
     }
 
-    // Check if user owns this booking
-    if (booking.userId !== user.id || user.role !== "ADMIN") {
+    // Check if user owns this booking or is an admin
+    if (booking.userId !== user.id && user.role !== "ADMIN") {
       return {
         success: false,
         error: "Unauthorized to cancel this booking",
@@ -215,7 +260,7 @@ export async function cancelTestDrive(bookingId) {
       success: true,
       message: "Test drive cancelled successfully",
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error cancelling test drive:", error);
     return {
       success: false,

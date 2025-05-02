@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import LogoPng from "@/public/Assets/logo.png"
-import { SignedIn, SignedOut, SignIn, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { ArrowLeft, CarFront, Heart, Layout } from "lucide-react";
 import { checkUser } from "@/lib/checkUser";

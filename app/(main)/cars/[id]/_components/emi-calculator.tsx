@@ -9,7 +9,7 @@ function EmiCalculator({ price = 1000 }) {
   const [interestRate, setInterestRate] = useState(5);
   const [loanTenure, setLoanTenure] = useState(1);
   const [results, setResults] = useState(null);
-  const [error, setError] = useState("");
+  const [error] = useState("");
 
   const handleLoanAmountChange = (value) => {
     const newLoanAmount = Math.min(Math.max(value, 1000), 150000);
@@ -26,13 +26,13 @@ function EmiCalculator({ price = 1000 }) {
     calculateLoan(loanAmount, newDownPayment, interestRate, loanTenure);
   };
 
-  const handleDownPaymentPercentChange = (percent) => {
-    const newPercent = Math.min(Math.max(percent, 0), 100);
-    setDownPaymentPercent(newPercent);
-    const newDownPayment = (newPercent / 100) * loanAmount;
-    setDownPayment(newDownPayment);
-    calculateLoan(loanAmount, newDownPayment, interestRate, loanTenure);
-  };
+  // const handleDownPaymentPercentChange = (percent) => {
+  //   const newPercent = Math.min(Math.max(percent, 0), 100);
+  //   setDownPaymentPercent(newPercent);
+  //   const newDownPayment = (newPercent / 100) * loanAmount;
+  //   setDownPayment(newDownPayment);
+  //   calculateLoan(loanAmount, newDownPayment, interestRate, loanTenure);
+  // };
 
   const handleInterestRateChange = (value) => {
     const newRate = Math.min(Math.max(value, 0.1), 25);

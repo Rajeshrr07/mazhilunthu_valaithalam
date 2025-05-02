@@ -4,8 +4,36 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-// Get dealership info with working hours
-export async function getDealershipInfo() {
+// Types
+interface WorkingHour {
+  dayOfWeek: string;
+  openTime: string;
+  closeTime: string;
+  isOpen: boolean;
+}
+
+interface Dealership {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  workingHours: WorkingHour[];
+}
+
+interface User {
+  id: string;
+  clerkUserId: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Get dealership info with working hours
+ */
+export async function getDealershipInfo(): Promise<{
+  success: boolean;
+  data?: any;
+}> {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
@@ -25,7 +53,6 @@ export async function getDealershipInfo() {
     if (!dealership) {
       dealership = await db.dealershipInfo.create({
         data: {
-          // Default values will be used from schema
           workingHours: {
             create: [
               {
@@ -92,13 +119,17 @@ export async function getDealershipInfo() {
         updatedAt: dealership.updatedAt.toISOString(),
       },
     };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error fetching dealership info:" + error.message);
   }
 }
 
-// Save working hours
-export async function saveWorkingHours(workingHours) {
+/**
+ * Save working hours
+ */
+export async function saveWorkingHours(
+  workingHours: WorkingHour[]
+): Promise<{ success: boolean }> {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
@@ -144,13 +175,18 @@ export async function saveWorkingHours(workingHours) {
     return {
       success: true,
     };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error saving working hours:" + error.message);
   }
 }
 
-// Get all users
-export async function getUsers() {
+/**
+ * Get all users
+ */
+export async function getUsers(): Promise<{
+  success: boolean;
+  data?: any;
+}> {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
@@ -171,19 +207,24 @@ export async function getUsers() {
 
     return {
       success: true,
-      data: users.map((user) => ({
+      data: users.map((user:any) => ({
         ...user,
         createdAt: user.createdAt.toISOString(),
         updatedAt: user.updatedAt.toISOString(),
       })),
     };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error fetching users:" + error.message);
   }
 }
 
-// Update user role
-export async function updateUserRole(userId, role) {
+/**
+ * Update user role
+ */
+export async function updateUserRole(
+  userId: string,
+  role: string
+): Promise<{ success: boolean }> {
   try {
     const { userId: adminId } = await auth();
     if (!adminId) throw new Error("Unauthorized");
@@ -209,7 +250,7 @@ export async function updateUserRole(userId, role) {
     return {
       success: true,
     };
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error updating user role:" + error.message);
   }
 }

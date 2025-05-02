@@ -79,7 +79,7 @@ export const SettingsForm = () => {
 
   // Custom hooks for API calls
   const {
-    loading: fetchingSettings,
+    // loading: fetchingSettings,
     fn: fetchDealershipInfo,
     data: settingsData,
     error: settingsError,
@@ -237,8 +237,8 @@ export const SettingsForm = () => {
             <CardHeader>
               <CardTitle>Working Hours</CardTitle>
               <CardDescription>
-                Set your dealership's working hours for each day of the week.
-              </CardDescription>
+  Set your dealership&apos;s working hours for each day of the week.
+</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

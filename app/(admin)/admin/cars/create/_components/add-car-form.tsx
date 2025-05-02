@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Camera, ImagePlus, Loader2, X, Upload } from "lucide-react";
+import { Camera, Loader2, X, Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 import { Input } from "@/components/ui/input";
@@ -671,8 +671,10 @@ export const AddCarForm = () => {
                 <div className="border-2 border-dashed rounded-lg p-6 text-center">
                   {imagePreview ? (
                     <div className="flex flex-col items-center">
-                      <img
+                      <Image
                         src={imagePreview}
+                        width={500} // Add appropriate width
+                        height={300} // Add appropriate height
                         alt="Car preview"
                         className="max-h-56 max-w-full object-contain mb-4"
                       />
@@ -739,16 +741,16 @@ export const AddCarForm = () => {
                   </div>
                 )}
 
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <h3 className="font-medium mb-2">How it works</h3>
-                  <ol className="space-y-2 text-sm text-gray-600 list-decimal pl-4">
-                    <li>Upload a clear image of the car</li>
-                    <li>Click "Extract Details" to analyze with Gemini AI</li>
-                    <li>Review the extracted information</li>
-                    <li>Fill in any missing details manually</li>
-                    <li>Add the car to your inventory</li>
-                  </ol>
-                </div>
+<div className="bg-gray-50 p-4 rounded-md">
+  <h3 className="font-medium mb-2">How it works</h3>
+  <ol className="space-y-2 text-sm text-gray-600 list-decimal pl-4">
+    <li>Upload a clear image of the car</li>
+    <li>Click &quot;Extract Details&quot; to analyze with Gemini AI</li>
+    <li>Review the extracted information</li>
+    <li>Fill in any missing details manually</li>
+    <li>Add the car to your inventory</li>
+  </ol>
+</div>
 
                 <div className="bg-amber-50 p-4 rounded-md">
                   <h3 className="font-medium text-amber-800 mb-1">

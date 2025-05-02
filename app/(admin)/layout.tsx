@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import { Sidebar } from "./admin/_components/sidebar";
 // import Header from "@/components/header";
 
-export default async function AdminLayout({ children }:any) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const admin = await getAdmin();
 
   // If user not found in our db or not an admin, redirect to 404

@@ -66,7 +66,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
     watch,
     setValue,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(testDriveSchema),
     defaultValues: {
@@ -437,19 +437,19 @@ export function TestDriveForm({ car, testDriveInfo }) {
             <div className="mt-8 bg-gray-50 p-4 rounded-lg">
               <h3 className="font-medium mb-2">What to expect</h3>
               <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                  Bring your driver's license for verification
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                  Test drives typically last 30-60 minutes
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                  A dealership representative will accompany you
-                </li>
-              </ul>
+  <li className="flex items-start">
+    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+    Bring your driver&apos;s license for verification
+  </li>
+  <li className="flex items-start">
+    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+    Test drives typically last 30-60 minutes
+  </li>
+  <li className="flex items-start">
+    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+    A dealership representative will accompany you
+  </li>
+</ul>
             </div>
           </CardContent>
         </Card>
@@ -492,8 +492,8 @@ export function TestDriveForm({ car, testDriveInfo }) {
               </div>
 
               <div className="mt-4 bg-blue-50 p-3 rounded text-sm text-blue-700">
-                Please arrive 10 minutes early with your driver's license.
-              </div>
+  Please arrive 10 minutes early with your driver&apos;s license.
+</div>
             </div>
           )}
 

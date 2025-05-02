@@ -12,7 +12,6 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  Star,
   DollarSign,
 } from "lucide-react";
 

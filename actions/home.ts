@@ -5,8 +5,30 @@ import { db } from "@/lib/prisma";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 
+// Types
+interface Car {
+  price: number | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+  [key: string]: any; // To allow additional fields
+}
+
+interface SerializedCar {
+  price: number;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}
+
+interface CarDetails {
+  make: string;
+  bodyType: string;
+  color: string;
+  confidence: number;
+}
+
 // Function to serialize car data
-function serializeCarData(car) {
+function serializeCarData(car: Car): SerializedCar {
   return {
     ...car,
     price: car.price ? parseFloat(car.price.toString()) : 0,
@@ -18,7 +40,7 @@ function serializeCarData(car) {
 /**
  * Get featured cars for the homepage
  */
-export async function getFeaturedCars(limit = 3) {
+export async function getFeaturedCars(limit: number = 3): Promise<SerializedCar[]> {
   try {
     const cars = await db.car.findMany({
       where: {
@@ -30,13 +52,13 @@ export async function getFeaturedCars(limit = 3) {
     });
 
     return cars.map(serializeCarData);
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error fetching featured cars:" + error.message);
   }
 }
 
 // Function to convert File to base64
-async function fileToBase64(file) {
+async function fileToBase64(file: File): Promise<string> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   return buffer.toString("base64");
@@ -45,7 +67,11 @@ async function fileToBase64(file) {
 /**
  * Process car image with Gemini AI
  */
-export async function processImageSearch(file) {
+export async function processImageSearch(file: File): Promise<{
+  success: boolean;
+  data?: CarDetails;
+  error?: string;
+}> {
   try {
     // Get request data for ArcJet
     const req = await request();
@@ -119,7 +145,7 @@ export async function processImageSearch(file) {
 
     // Parse the JSON response
     try {
-      const carDetails = JSON.parse(cleanedText);
+      const carDetails: CarDetails = JSON.parse(cleanedText);
 
       // Return success response with data
       return {
@@ -134,7 +160,7 @@ export async function processImageSearch(file) {
         error: "Failed to parse AI response",
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("AI Search error:" + error.message);
   }
-} 
+}

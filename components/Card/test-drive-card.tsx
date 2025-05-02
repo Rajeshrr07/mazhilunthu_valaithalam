@@ -22,6 +22,7 @@ const formatTime = (timeString) => {
   try {
     return format(parseISO(`2022-01-01T${timeString}`), "h:mm a");
   } catch (error) {
+    console.log('error: ', error);
     return timeString;
   }
 };
