@@ -33,7 +33,7 @@ export const featuredCars = [
       model: "Model 3",
       year: 2022,
       price: 42999,
-      images: ["/Assets/3 (1).jpg"],
+      images: ["/Assets/3.jpg"],
       transmission: "Automatic",
       fuelType: "Electric",
       bodyType: "Sedan",
