@@ -31,7 +31,12 @@ type UserType = {
   email: string;
 };
 
-type BookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+type BookingStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "NO_SHOW";
 
 type BookingType = {
   id: string;
@@ -46,12 +51,12 @@ type BookingType = {
 };
 
 interface TestDriveCardProps {
-  booking: BookingType | any ;
+  booking: BookingType;
   onCancel?: (bookingId: string) => Promise<void>;
   showActions?: boolean;
   isPast?: boolean;
   isAdmin?: boolean;
-  isCancelling?: boolean | any;
+  isCancelling?: boolean;
   renderStatusSelector?: () => React.ReactNode;
 }
 

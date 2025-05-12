@@ -61,6 +61,9 @@ const DAYS = [
   { value: "SUNDAY", label: "Sunday" },
 ];
 
+type WorkingHourField = "openTime" | "closeTime" | "isOpen";
+type WorkingHourValue = string | boolean;
+
 export const SettingsForm = () => {
   const [workingHours, setWorkingHours] = useState(
     DAYS.map((day) => ({
@@ -73,9 +76,17 @@ export const SettingsForm = () => {
 
   const [userSearch, setUserSearch] = useState("");
   const [confirmAdminDialog, setConfirmAdminDialog] = useState(false);
-  const [userToPromote, setUserToPromote] = useState<{ id: string; name?: string; email: string } | null>(null);
+  const [userToPromote, setUserToPromote] = useState<{
+    id: string;
+    name?: string;
+    email: string;
+  } | null>(null);
   const [confirmRemoveDialog, setConfirmRemoveDialog] = useState(false);
-  const [userToDemote, setUserToDemote] = useState<{ id: string; name?: string; email: string } | null>(null);
+  const [userToDemote, setUserToDemote] = useState<{
+    id: string;
+    name?: string;
+    email: string;
+  } | null>(null);
 
   // Custom hooks for API calls
   const {
@@ -122,7 +133,12 @@ export const SettingsForm = () => {
         const mappedHours = DAYS.map((day) => {
           // Find matching working hour
           const hourData = dealership.workingHours.find(
-            (h:any) => h.dayOfWeek === day.value
+            (h: {
+              dayOfWeek: string;
+              openTime: string;
+              closeTime: string;
+              isOpen: boolean;
+            }) => h.dayOfWeek === day.value
           );
 
           if (hourData) {
@@ -183,7 +199,11 @@ export const SettingsForm = () => {
   }, [saveResult, updateRoleResult]);
 
   // Handle working hours change
-  const handleWorkingHourChange = (index:any, field:any, value:any) => {
+  const handleWorkingHourChange = (
+    index: number,
+    field: WorkingHourField,
+    value: WorkingHourValue
+  ) => {
     const updatedHours = [...workingHours];
     updatedHours[index] = {
       ...updatedHours[index],
@@ -212,7 +232,7 @@ export const SettingsForm = () => {
   // Filter users by search term
   const filteredUsers = usersData?.success
     ? usersData.data.filter(
-        (user:any) =>
+        (user: any) =>
           user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
           user.email.toLowerCase().includes(userSearch.toLowerCase())
       )
@@ -237,8 +257,9 @@ export const SettingsForm = () => {
             <CardHeader>
               <CardTitle>Working Hours</CardTitle>
               <CardDescription>
-  Set your dealership&apos;s working hours for each day of the week.
-</CardDescription>
+                Set your dealership&apos;s working hours for each day of the
+                week.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -316,7 +337,11 @@ export const SettingsForm = () => {
               </div>
 
               <div className="mt-6 flex justify-end">
-                <Button onClick={handleSaveHours} disabled={!!savingHours} className="cursor-pointer">
+                <Button
+                  onClick={handleSaveHours}
+                  disabled={!!savingHours}
+                  className="cursor-pointer"
+                >
                   {savingHours ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -370,7 +395,7 @@ export const SettingsForm = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.map((user:any) => (
+                      {filteredUsers.map((user: any) => (
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-2">
@@ -405,7 +430,7 @@ export const SettingsForm = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="text-red-600 cursor-pointer" 
+                                className="text-red-600 cursor-pointer"
                                 onClick={() => {
                                   setUserToDemote(user);
                                   setConfirmRemoveDialog(true);

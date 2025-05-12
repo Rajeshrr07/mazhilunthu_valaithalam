@@ -12,24 +12,23 @@ import { toggleSavedCar } from "@/actions/car-listing";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import useFetch from "@/hooks/use-fetch";
-import { serializeCarData } from '@/lib/helper';
 
 interface Car {
   id: string;
-  make: string;
-  model: string;
-  price: number;
-  year: number;
-  transmission: string;
-  fuelType: string;
-  bodyType: string;
-  mileage: number;
-  color: string;
-  images: string[];
-  wishlisted: boolean;
+  make?: string;
+  model?: string;
+  price?: number;
+  year?: number;
+  transmission?: string;
+  fuelType?: string;
+  bodyType?: string;
+  mileage?: number;
+  color?: string;
+  images?: string[];
+  wishlisted?: boolean;
 }
 
-const CarCard = ({ car }: { car: any }) => {
+const CarCard = ({ car }: { car: Car }) => {
   const { isSignedIn } = useAuth();
   const router = useRouter();
   const [isSaved, setIsSaved] = useState(car.wishlisted);
@@ -58,7 +57,7 @@ const CarCard = ({ car }: { car: any }) => {
   }, [toggleError]);
 
   // Handle save/unsave car
-  const handleToggleSave = async (e:any) => {
+  const handleToggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -117,7 +116,7 @@ const CarCard = ({ car }: { car: any }) => {
             {car.make} {car.model}
           </h3>
           <span className="text-xl font-bold text-blue-600">
-            ${car.price.toLocaleString()}
+            ${car?.price?.toLocaleString()}
           </span>
         </div>
 
@@ -134,7 +133,7 @@ const CarCard = ({ car }: { car: any }) => {
             {car.bodyType}
           </Badge>
           <Badge variant="outline" className="bg-gray-50">
-            {car.mileage.toLocaleString()} miles
+            {car?.mileage?.toLocaleString()} miles
           </Badge>
           <Badge variant="outline" className="bg-gray-50">
             {car.color}

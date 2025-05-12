@@ -21,7 +21,10 @@ interface CarFilterControlsProps {
     priceRange: { min: number; max: number };
   };
   currentFilters: CurrentFilters;
-  onFilterChange: (filterType: keyof CurrentFilters, value: any) => void;
+  onFilterChange: (
+    filterType: keyof CurrentFilters,
+    value: string | [number, number]
+  ) => void;
   onClearFilter: (filterType: keyof CurrentFilters) => void;
 }
 
@@ -91,7 +94,14 @@ export const CarFilterControls = ({
             max={filters.priceRange.max}
             step={100}
             value={priceRange}
-            onValueChange={(value) => onFilterChange("priceRange", value)}
+            onValueChange={(value) => {
+              if (value.length === 2) {
+                onFilterChange("priceRange", [value[0], value[1]] as [
+                  number,
+                  number
+                ]);
+              }
+            }}
           />
         </div>
         <div className="flex items-center justify-between">

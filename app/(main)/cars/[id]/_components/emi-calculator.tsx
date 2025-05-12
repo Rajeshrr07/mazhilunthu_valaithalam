@@ -19,9 +19,9 @@ function EmiCalculator({ price = 1000 }) {
     downPayment: string;
   }
 
-  interface EmiCalculatorProps {
-    price?: number;
-  }
+  // interface EmiCalculatorProps {
+  //   price?: number;
+  // }
 
   const handleLoanAmountChange = (value: number): void => {
     const newLoanAmount = Math.min(Math.max(value, 1000), 150000);
@@ -107,7 +107,7 @@ function EmiCalculator({ price = 1000 }) {
     calculateLoan(loanAmount, downPayment, interestRate, loanTenure);
   }, []);
 
-  const formatNumber = (num:any) => {
+  const formatNumber = (num: number): string => {
     return new Intl.NumberFormat("en-US").format(num);
   };
 
@@ -264,7 +264,7 @@ function EmiCalculator({ price = 1000 }) {
                   Monthly Payment
                 </div>
                 <div className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                  ${formatNumber(results.emi)}
+                  ${formatNumber(parseFloat(results.emi))}
                 </div>
               </div>
 
@@ -283,7 +283,7 @@ function EmiCalculator({ price = 1000 }) {
                     Down Payment
                   </div>
                   <div className="text-lg font-bold text-gray-900 dark:text-white mt-1">
-                    ${formatNumber(results.downPayment)}
+                    ${formatNumber(parseFloat(results.downPayment))}
                   </div>
                 </div>
 
@@ -292,7 +292,7 @@ function EmiCalculator({ price = 1000 }) {
                     Loan Amount
                   </div>
                   <div className="text-lg font-bold text-gray-900 dark:text-white mt-1">
-                    ${formatNumber(results.loanPrincipal)}
+                    ${formatNumber(parseFloat(results.loanPrincipal))}
                   </div>
                 </div>
 
@@ -301,7 +301,7 @@ function EmiCalculator({ price = 1000 }) {
                     Total Interest
                   </div>
                   <div className="text-lg font-bold text-gray-900 dark:text-white mt-1">
-                    ${formatNumber(results.totalInterest)}
+                    ${formatNumber(parseFloat(results.totalInterest))}
                   </div>
                 </div>
 

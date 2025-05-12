@@ -15,7 +15,28 @@ import {
   DollarSign,
 } from "lucide-react";
 
-export function Dashboard({ initialData }:any) {
+interface DashboardData {
+  success: boolean;
+  error?: string;
+  data: {
+    cars: {
+      total: number;
+      available: number;
+      sold: number;
+    };
+    testDrives: {
+      total: number;
+      pending: number;
+      confirmed: number;
+      completed: number;
+      cancelled: number;
+      noShow: number;
+      conversionRate: number;
+    };
+  };
+}
+
+export function Dashboard({ initialData }: { initialData: DashboardData }) {
   const [activeTab, setActiveTab] = useState("overview");
 
   // Show error if data fetch failed
@@ -41,8 +62,12 @@ export function Dashboard({ initialData }:any) {
         onValueChange={setActiveTab}
       >
         <TabsList>
-          <TabsTrigger value="overview" className="cursor-pointer">Overview</TabsTrigger>
-          <TabsTrigger value="test-drives" className="cursor-pointer">Test Drives</TabsTrigger>
+          <TabsTrigger value="overview" className="cursor-pointer">
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="test-drives" className="cursor-pointer">
+            Test Drives
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}

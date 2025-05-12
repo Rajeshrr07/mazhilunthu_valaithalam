@@ -93,7 +93,10 @@ export const TestDrivesList = () => {
     newStatus: string;
   }
 
-  const handleUpdateStatus = async ({ bookingId, newStatus }: UpdateStatusParams) => {
+  const handleUpdateStatus = async ({
+    bookingId,
+    newStatus,
+  }: UpdateStatusParams) => {
     if (newStatus) {
       await updateStatusFn(bookingId, newStatus);
     }
@@ -111,10 +114,7 @@ export const TestDrivesList = () => {
         <div className="flex flex-col sm:flex-row gap-4 w-full">
           {/* Status Filter */}
           <div className="w-full sm:w-48">
-            <Select
-              value={statusFilter}
-              onValueChange={setStatusFilter}
-            >
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
@@ -187,40 +187,53 @@ export const TestDrivesList = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {testDrivesData?.data?.map((booking: any) => (
-                <div key={booking.id} className="relative">
-                  <TestDriveCard
-                    booking={booking}
-                    onCancel={handleCancel}
-                    showActions={["PENDING", "CONFIRMED"].includes(
-                      booking.status
-                    )}
-                    isAdmin={true}
-                    isCancelling={cancelling ?? false}
-                    // Removed cancelError as it is not defined in TestDriveCard props
-                    renderStatusSelector={() => (
-                      <Select
-                        value={booking.status}
-                        onValueChange={(value) =>
-                          handleUpdateStatus({ bookingId: booking.id, newStatus: value })
-                        }
-                        disabled={!!updatingStatus}
-                      >
-                        <SelectTrigger className="w-full h-8">
-                          <SelectValue placeholder="Update Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PENDING">Pending</SelectItem>
-                          <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                          <SelectItem value="COMPLETED">Completed</SelectItem>
-                          <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                          <SelectItem value="NO_SHOW">No Show</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    ) as unknown as null}
-                  />
-                </div>
-              ))}
+              {testDrivesData?.data?.map(
+                (booking: { id: string; status: string }) => (
+                  <div key={booking.id} className="relative">
+                    <TestDriveCard
+                      booking={booking}
+                      onCancel={handleCancel}
+                      showActions={["PENDING", "CONFIRMED"].includes(
+                        booking.status
+                      )}
+                      isAdmin={true}
+                      isCancelling={cancelling ?? false}
+                      // Removed cancelError as it is not defined in TestDriveCard props
+                      renderStatusSelector={() =>
+                        (
+                          <Select
+                            value={booking.status}
+                            onValueChange={(value) =>
+                              handleUpdateStatus({
+                                bookingId: booking.id,
+                                newStatus: value,
+                              })
+                            }
+                            disabled={!!updatingStatus}
+                          >
+                            <SelectTrigger className="w-full h-8">
+                              <SelectValue placeholder="Update Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="PENDING">Pending</SelectItem>
+                              <SelectItem value="CONFIRMED">
+                                Confirmed
+                              </SelectItem>
+                              <SelectItem value="COMPLETED">
+                                Completed
+                              </SelectItem>
+                              <SelectItem value="CANCELLED">
+                                Cancelled
+                              </SelectItem>
+                              <SelectItem value="NO_SHOW">No Show</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) as unknown as null
+                      }
+                    />
+                  </div>
+                )
+              )}
             </div>
           )}
         </CardContent>

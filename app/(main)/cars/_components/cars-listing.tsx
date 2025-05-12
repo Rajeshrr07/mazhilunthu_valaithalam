@@ -11,7 +11,6 @@ import useFetch from "@/hooks/use-fetch";
 import { getCars } from "@/actions/car-listing";
 import CarListingsLoading from "./car-listing-loading";
 
-
 import {
   Pagination,
   PaginationContent,
@@ -26,7 +25,7 @@ import {
 interface Car {
   id: string;
   // Add other car properties here based on your actual data structure
-  [key: string]: any;
+  [key: string]: string | number;
 }
 
 interface PaginationData {
@@ -42,8 +41,6 @@ interface ApiResponse {
   pagination: PaginationData;
 }
 
-
-
 export function CarListings() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -57,12 +54,15 @@ export function CarListings() {
   const fuelType = searchParams.get("fuelType") || "";
   const transmission = searchParams.get("transmission") || "";
   const minPrice = Number(searchParams.get("minPrice")) || 0;
-  const maxPrice = Number(searchParams.get("maxPrice")) || Number.MAX_SAFE_INTEGER;
-  const sortBy = searchParams.get("sortBy") || "newest";
+  const maxPrice =
+    Number(searchParams.get("maxPrice")) || Number.MAX_SAFE_INTEGER;
+  const sortBy =
+    (searchParams.get("sortBy") as "newest" | "priceAsc" | "priceDesc") ||
+    "newest";
   const page = parseInt(searchParams.get("page") || "1");
 
   // Use the useFetch hook with proper generics
-  const { loading, fn: fetchCars, data: result, error } = useFetch<ApiResponse,any>(getCars);
+  const { loading, fn: fetchCars, data: result, error } = useFetch(getCars);
 
   // Fetch cars when filters change
   useEffect(() => {
@@ -146,8 +146,8 @@ export function CarListings() {
         </div>
         <h3 className="text-lg font-medium mb-2">No cars found</h3>
         <p className="text-gray-500 mb-6 max-w-md">
-          We couldn&apos;t find any cars matching your search criteria. Try adjusting
-          your filters or search term.
+          We couldn&apos;t find any cars matching your search criteria. Try
+          adjusting your filters or search term.
         </p>
         <Button variant="outline" asChild>
           <Link href="/cars">Clear all filters</Link>
@@ -157,7 +157,7 @@ export function CarListings() {
   }
 
   // Generate pagination items
-  const paginationItems:any = [];
+  const paginationItems: React.ReactElement[] = [];
 
   // Calculate which page numbers to show (first, last, and around current page)
   const visiblePageNumbers: number[] = [];

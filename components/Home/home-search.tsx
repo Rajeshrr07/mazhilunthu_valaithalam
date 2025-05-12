@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { processImageSearch } from "@/actions/home";
 import useFetch from "@/hooks/use-fetch";
 
-const HomeSearch=()=> {
+const HomeSearch = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchImage, setSearchImage] = useState<FileWithPreview | null>(null);
@@ -91,7 +91,7 @@ const HomeSearch=()=> {
     });
 
   // Handle text search submissions
-  const handleTextSearch = (e:any) => {
+  const handleTextSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) {
       toast.error("Please enter a search term");
@@ -102,7 +102,7 @@ const HomeSearch=()=> {
   };
 
   // Handle image search submissions
-  const handleImageSearch = async (e:any) => {
+  const handleImageSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchImage) {
       toast.error("Please upload an image first");
@@ -206,6 +206,6 @@ const HomeSearch=()=> {
       )}
     </div>
   );
-}
+};
 
 export default HomeSearch;

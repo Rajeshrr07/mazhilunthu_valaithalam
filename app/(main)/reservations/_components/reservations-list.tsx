@@ -28,11 +28,8 @@ interface ReservationsListProps {
 }
 
 export function ReservationsList({ initialData }: ReservationsListProps) {
-  const {
-    loading: cancelling,
-    fn: cancelBookingFn,
-    error: cancelError,
-  } = useFetch(cancelTestDrive);
+  const { loading: cancelling, fn: cancelBookingFn } =
+    useFetch(cancelTestDrive);
 
   // Handle cancellation
   const handleCancelBooking = async (bookingId: string): Promise<void> => {
@@ -57,9 +54,9 @@ export function ReservationsList({ initialData }: ReservationsListProps) {
         </div>
         <h3 className="text-lg font-medium mb-2">No Reservations Found</h3>
         <p className="text-gray-500 mb-6 max-w-md">
-  You don&apos;t have any test drive reservations yet. Browse our cars and
-  book a test drive to get started.
-</p>
+          You don&apos;t have any test drive reservations yet. Browse our cars
+          and book a test drive to get started.
+        </p>
         <Button variant="default" asChild>
           <Link href="/cars">Browse Cars</Link>
         </Button>
