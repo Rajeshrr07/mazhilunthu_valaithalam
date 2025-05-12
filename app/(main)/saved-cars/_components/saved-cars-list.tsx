@@ -5,7 +5,16 @@ import { Button } from "@/components/ui/button";
 import  CarCard  from "@/components/Card/car-card";
 import { Heart } from "lucide-react";
 
-export function SavedCarsList({ initialData }) {
+interface Car {
+  id: string;
+  [key: string]: any; // Adjust this based on the actual car properties
+}
+
+interface InitialData {
+  data: Car[];
+}
+
+export function SavedCarsList({ initialData }: { initialData: InitialData }) {
   // No saved cars
   if (!initialData?.data || initialData?.data.length === 0) {
     return (

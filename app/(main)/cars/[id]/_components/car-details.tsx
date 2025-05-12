@@ -33,7 +33,45 @@ import {
 } from "@/components/ui/dialog";
 import EmiCalculator from "./emi-calculator";
 
-export function CarDetails({ car, testDriveInfo }) {
+interface TestDriveInfo {
+  userTestDrive?: {
+    bookingDate: string;
+  };
+  dealership?: {
+    address?: string;
+    phone?: string;
+    email?: string;
+    workingHours?: {
+      dayOfWeek: string;
+      isOpen: boolean;
+      openTime: string;
+      closeTime: string;
+    }[];
+  };
+}
+
+interface CarDetailsProps {
+  car: {
+    id: string;
+    wishlisted: boolean;
+    images: string[];
+    year: number;
+    make: string;
+    model: string;
+    price: number;
+    mileage: number;
+    fuelType: string;
+    transmission: string;
+    bodyType: string;
+    description: string;
+    color: string;
+    seats?: number;
+    status: string;
+  };
+  testDriveInfo: TestDriveInfo;
+}
+
+export function CarDetails({ car, testDriveInfo }: CarDetailsProps) {
   const router = useRouter();
   const { isSignedIn } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -49,7 +87,7 @@ export function CarDetails({ car, testDriveInfo }) {
   // Handle toggle result with useEffect
   useEffect(() => {
     if (toggleResult?.success) {
-      setIsWishlisted(toggleResult.saved);
+      setIsWishlisted(toggleResult.saved ?? false);
       toast.success(toggleResult.message);
     }
   }, [toggleResult]);
@@ -163,7 +201,7 @@ export function CarDetails({ car, testDriveInfo }) {
                 isWishlisted ? "text-red-500" : ""
               }`}
               onClick={handleSaveCar}
-              disabled={savingCar}
+              disabled={!!savingCar}
             >
               <Heart
                 className={`h-5 w-5 ${isWishlisted ? "fill-red-500" : ""}`}
@@ -273,7 +311,7 @@ export function CarDetails({ car, testDriveInfo }) {
             <Button
               className="w-full py-6 text-lg cursor-pointer"
               onClick={handleBookTestDrive}
-              disabled={testDriveInfo.userTestDrive}
+              disabled={!!testDriveInfo.userTestDrive}
             >
               <Calendar className="mr-2 h-5 w-5" />
               {testDriveInfo.userTestDrive

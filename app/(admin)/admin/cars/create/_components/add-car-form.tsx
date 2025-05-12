@@ -152,7 +152,7 @@ export const AddCarForm = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setUploadedImages((prev) => [...prev, e.target.result as string]);
+          setUploadedImages((prev) => [...prev, e.target?.result as string]);
         }
       };
       if (uploadedAiImage) {
@@ -285,8 +285,8 @@ export const AddCarForm = () => {
       ...data,
       year: parseInt(data.year),
       price: parseFloat(data.price),
-      mileage: parseInt(data.mileage),
-      seats: data.seats ? parseInt(data.seats) : null,
+      mileage: data.mileage.toString(),
+      seats: data.seats ? parseInt(data.seats) : 0,
     };
 
     // Call the addCar function with our useFetch hook
@@ -304,9 +304,13 @@ export const AddCarForm = () => {
         onValueChange={setActiveTab}
         className="mt-6"
       >
-        <TabsList className="grid w-full grid-cols-2 " >
-          <TabsTrigger value="manual" className="cursor-pointer">Manual Entry</TabsTrigger>
-          <TabsTrigger value="ai" className="cursor-pointer">AI Upload</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 ">
+          <TabsTrigger value="manual" className="cursor-pointer">
+            Manual Entry
+          </TabsTrigger>
+          <TabsTrigger value="ai" className="cursor-pointer">
+            AI Upload
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="manual" className="mt-6">
@@ -514,7 +518,7 @@ export const AddCarForm = () => {
                   <div className="space-y-2">
                     <Label htmlFor="status">Status</Label>
                     <Select
-                      onValueChange={(value) => setValue("status", value)}
+                      onValueChange={(value) => setValue("status", value as "AVAILABLE" | "UNAVAILABLE" | "SOLD")}
                       defaultValue={getValues("status")}
                     >
                       <SelectTrigger>
@@ -555,7 +559,7 @@ export const AddCarForm = () => {
                     id="featured"
                     checked={watch("featured")}
                     onCheckedChange={(checked) => {
-                      setValue("featured", checked);
+                      setValue("featured", checked === true);
                     }}
                   />
                   <div className="space-y-1 leading-none">
@@ -642,7 +646,7 @@ export const AddCarForm = () => {
                 <Button
                   type="submit"
                   className="w-full md:w-auto cursor-pointer"
-                  disabled={addCarLoading}
+                  disabled={!!addCarLoading}
                 >
                   {addCarLoading ? (
                     <>
@@ -692,7 +696,7 @@ export const AddCarForm = () => {
                         </Button>
                         <Button
                           onClick={processWithAI}
-                          disabled={processImageLoading}
+                          disabled={!!processImageLoading}
                           size="sm"
                           className="cursor-pointer"
                         >
@@ -741,16 +745,19 @@ export const AddCarForm = () => {
                   </div>
                 )}
 
-<div className="bg-gray-50 p-4 rounded-md">
-  <h3 className="font-medium mb-2">How it works</h3>
-  <ol className="space-y-2 text-sm text-gray-600 list-decimal pl-4">
-    <li>Upload a clear image of the car</li>
-    <li>Click &quot;Extract Details&quot; to analyze with Gemini AI</li>
-    <li>Review the extracted information</li>
-    <li>Fill in any missing details manually</li>
-    <li>Add the car to your inventory</li>
-  </ol>
-</div>
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <h3 className="font-medium mb-2">How it works</h3>
+                  <ol className="space-y-2 text-sm text-gray-600 list-decimal pl-4">
+                    <li>Upload a clear image of the car</li>
+                    <li>
+                      Click &quot;Extract Details&quot; to analyze with Gemini
+                      AI
+                    </li>
+                    <li>Review the extracted information</li>
+                    <li>Fill in any missing details manually</li>
+                    <li>Add the car to your inventory</li>
+                  </ol>
+                </div>
 
                 <div className="bg-amber-50 p-4 rounded-md">
                   <h3 className="font-medium text-amber-800 mb-1">

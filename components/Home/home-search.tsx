@@ -13,7 +13,7 @@ import useFetch from "@/hooks/use-fetch";
 const HomeSearch=()=> {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchImage, setSearchImage] = useState(null);
+  const [searchImage, setSearchImage] = useState<FileWithPreview | null>(null);
   const [imagePreview, setImagePreview] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isImageSearchActive, setIsImageSearchActive] = useState(false);
@@ -32,11 +32,11 @@ const HomeSearch=()=> {
       const params = new URLSearchParams();
 
       // Add extracted params to the search
-      if (processResult.data.make) params.set("make", processResult.data.make);
-      if (processResult.data.bodyType)
+      if (processResult.data?.make) params.set("make", processResult.data.make);
+      if (processResult.data?.bodyType)
         params.set("bodyType", processResult.data.bodyType);
-      if (processResult.data.color)
-        params.set("color", processResult.data.color);
+      if (processResult.data?.color)
+        params.set("color", processResult.data?.color);
 
       // Redirect to search results
       router.push(`/cars?${params.toString()}`);
@@ -52,7 +52,11 @@ const HomeSearch=()=> {
   }, [processError]);
 
   // Handle image upload with react-dropzone
-  const onDrop = (acceptedFiles) => {
+  interface FileWithPreview extends File {
+    preview?: string;
+  }
+
+  const onDrop = (acceptedFiles: FileWithPreview[]) => {
     const file = acceptedFiles[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -65,7 +69,7 @@ const HomeSearch=()=> {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setImagePreview(reader.result as string);
         setIsUploading(false);
         toast.success("Image uploaded successfully");
       };
@@ -87,7 +91,7 @@ const HomeSearch=()=> {
     });
 
   // Handle text search submissions
-  const handleTextSearch = (e) => {
+  const handleTextSearch = (e:any) => {
     e.preventDefault();
     if (!searchTerm.trim()) {
       toast.error("Please enter a search term");
@@ -98,7 +102,7 @@ const HomeSearch=()=> {
   };
 
   // Handle image search submissions
-  const handleImageSearch = async (e) => {
+  const handleImageSearch = async (e:any) => {
     e.preventDefault();
     if (!searchImage) {
       toast.error("Please upload an image first");
@@ -188,7 +192,7 @@ const HomeSearch=()=> {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isUploading || isProcessing}
+                disabled={!!isUploading || !!isProcessing}
               >
                 {isUploading
                   ? "Uploading..."

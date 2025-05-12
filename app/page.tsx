@@ -76,7 +76,7 @@ export default async function Home() {
                 <div className="h-16 w-auto mx-auto mb-2 relative">
                   <Image
                     src={
-                      make.imageUrl || `/make/${make.name.toLowerCase()}.webp`
+                      make.image || `/make/${make.name.toLowerCase()}.webp`
                     }
                     alt={make.name}
                     fill
@@ -151,7 +151,7 @@ export default async function Home() {
                 <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative">
                   <Image
                     src={
-                      type.imageUrl || `/body/${type.name.toLowerCase()}.webp`
+                      type.image || `/body/${type.name.toLowerCase()}.webp`
                     }
                     alt={type.name}
                     fill

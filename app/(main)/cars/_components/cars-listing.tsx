@@ -6,10 +6,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
-import  CarCard  from "@/components/Card/car-card";
+import CarCard from "@/components/Card/car-card";
 import useFetch from "@/hooks/use-fetch";
 import { getCars } from "@/actions/car-listing";
 import CarListingsLoading from "./car-listing-loading";
+
 
 import {
   Pagination,
@@ -20,6 +21,28 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+// Define types for the car data
+interface Car {
+  id: string;
+  // Add other car properties here based on your actual data structure
+  [key: string]: any;
+}
+
+interface PaginationData {
+  total: number;
+  pages: number;
+  page: number;
+  limit: number;
+}
+
+interface ApiResponse {
+  success: boolean;
+  data: Car[];
+  pagination: PaginationData;
+}
+
+
 
 export function CarListings() {
   const searchParams = useSearchParams();
@@ -33,13 +56,13 @@ export function CarListings() {
   const bodyType = searchParams.get("bodyType") || "";
   const fuelType = searchParams.get("fuelType") || "";
   const transmission = searchParams.get("transmission") || "";
-  const minPrice = searchParams.get("minPrice") || 0;
-  const maxPrice = searchParams.get("maxPrice") || Number.MAX_SAFE_INTEGER;
+  const minPrice = Number(searchParams.get("minPrice")) || 0;
+  const maxPrice = Number(searchParams.get("maxPrice")) || Number.MAX_SAFE_INTEGER;
   const sortBy = searchParams.get("sortBy") || "newest";
   const page = parseInt(searchParams.get("page") || "1");
 
-  // Use the useFetch hook
-  const { loading, fn: fetchCars, data: result, error } = useFetch(getCars);
+  // Use the useFetch hook with proper generics
+  const { loading, fn: fetchCars, data: result, error } = useFetch<ApiResponse,any>(getCars);
 
   // Fetch cars when filters change
   useEffect(() => {
@@ -65,25 +88,26 @@ export function CarListings() {
     maxPrice,
     sortBy,
     page,
+    fetchCars, // Add fetchCars to dependencies
   ]);
 
   // Update URL when page changes
   useEffect(() => {
     if (currentPage !== page) {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams.toString());
       params.set("page", currentPage.toString());
       router.push(`?${params.toString()}`);
     }
   }, [currentPage, router, searchParams, page]);
 
   // Handle pagination clicks
-  const handlePageChange = (pageNum) => {
+  const handlePageChange = (pageNum: number) => {
     setCurrentPage(pageNum);
   };
 
   // Generate pagination URL
-  const getPaginationUrl = (pageNum) => {
-    const params = new URLSearchParams(searchParams);
+  const getPaginationUrl = (pageNum: number): string => {
+    const params = new URLSearchParams(searchParams.toString());
     params.set("page", pageNum.toString());
     return `?${params.toString()}`;
   };
@@ -122,9 +146,9 @@ export function CarListings() {
         </div>
         <h3 className="text-lg font-medium mb-2">No cars found</h3>
         <p className="text-gray-500 mb-6 max-w-md">
-  We couldn&apos;t find any cars matching your search criteria. Try adjusting
-  your filters or search term.
-</p>
+          We couldn&apos;t find any cars matching your search criteria. Try adjusting
+          your filters or search term.
+        </p>
         <Button variant="outline" asChild>
           <Link href="/cars">Clear all filters</Link>
         </Button>
@@ -133,10 +157,10 @@ export function CarListings() {
   }
 
   // Generate pagination items
-  const paginationItems = [];
+  const paginationItems:any = [];
 
   // Calculate which page numbers to show (first, last, and around current page)
-  const visiblePageNumbers = [];
+  const visiblePageNumbers: number[] = [];
 
   // Always show page 1
   visiblePageNumbers.push(1);

@@ -15,7 +15,7 @@ import {
   DollarSign,
 } from "lucide-react";
 
-export function Dashboard({ initialData }) {
+export function Dashboard({ initialData }:any) {
   const [activeTab, setActiveTab] = useState("overview");
 
   // Show error if data fetch failed

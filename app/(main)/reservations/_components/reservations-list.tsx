@@ -7,7 +7,27 @@ import { TestDriveCard } from "@/components/Card/test-drive-card";
 import useFetch from "@/hooks/use-fetch";
 import { cancelTestDrive } from "@/actions/test-drive";
 
-export function ReservationsList({ initialData }) {
+interface Booking {
+  id: string;
+  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+  carId: string;
+  car: {
+    make: string;
+    model: string;
+    year: number;
+  };
+  bookingDate: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface ReservationsListProps {
+  initialData: {
+    data: Booking[];
+  };
+}
+
+export function ReservationsList({ initialData }: ReservationsListProps) {
   const {
     loading: cancelling,
     fn: cancelBookingFn,
@@ -15,7 +35,7 @@ export function ReservationsList({ initialData }) {
   } = useFetch(cancelTestDrive);
 
   // Handle cancellation
-  const handleCancelBooking = async (bookingId) => {
+  const handleCancelBooking = async (bookingId: string): Promise<void> => {
     await cancelBookingFn(bookingId);
   };
 
@@ -61,10 +81,9 @@ export function ReservationsList({ initialData }) {
                 key={booking.id}
                 booking={booking}
                 onCancel={handleCancelBooking}
-                isCancelling={cancelling}
+                isCancelling={cancelling ?? false}
                 showActions
-                cancelError={cancelError}
-                viewMode="list"
+                // viewMode="list"
               />
             ))}
           </div>
@@ -82,6 +101,7 @@ export function ReservationsList({ initialData }) {
                 booking={booking}
                 showActions={false}
                 isPast
+                // onCancel={() => {}}
               />
             ))}
           </div>

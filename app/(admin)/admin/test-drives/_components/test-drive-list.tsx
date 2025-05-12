@@ -82,20 +82,25 @@ export const TestDrivesList = () => {
   }, [updateResult, cancelResult]);
 
   // Handle search submit
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     fetchTestDrives({ search, status: statusFilter });
   };
 
   // Handle status update
-  const handleUpdateStatus = async (bookingId, newStatus) => {
+  interface UpdateStatusParams {
+    bookingId: string;
+    newStatus: string;
+  }
+
+  const handleUpdateStatus = async ({ bookingId, newStatus }: UpdateStatusParams) => {
     if (newStatus) {
       await updateStatusFn(bookingId, newStatus);
     }
   };
 
   // Handle booking cancellation
-  const handleCancel = async (bookingId) => {
+  const handleCancel = async (bookingId: string) => {
     await cancelTestDriveFn(bookingId);
   };
 
@@ -105,23 +110,24 @@ export const TestDrivesList = () => {
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-4 w-full">
           {/* Status Filter */}
-          <Select
-            value={statusFilter}
-            onValueChange={setStatusFilter}
-            className="w-full sm:w-48"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Statuses" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem>All Statuses</SelectItem>
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-              <SelectItem value="CANCELLED">Cancelled</SelectItem>
-              <SelectItem value="NO_SHOW">No Show</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="w-full sm:w-48">
+            <Select
+              value={statusFilter}
+              onValueChange={setStatusFilter}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
+                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                <SelectItem value="NO_SHOW">No Show</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* Search Form */}
           <form onSubmit={handleSearchSubmit} className="flex w-full">
@@ -181,7 +187,7 @@ export const TestDrivesList = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {testDrivesData?.data?.map((booking) => (
+              {testDrivesData?.data?.map((booking: any) => (
                 <div key={booking.id} className="relative">
                   <TestDriveCard
                     booking={booking}
@@ -190,15 +196,15 @@ export const TestDrivesList = () => {
                       booking.status
                     )}
                     isAdmin={true}
-                    isCancelling={cancelling}
-                    cancelError={cancelError}
+                    isCancelling={cancelling ?? false}
+                    // Removed cancelError as it is not defined in TestDriveCard props
                     renderStatusSelector={() => (
                       <Select
                         value={booking.status}
                         onValueChange={(value) =>
-                          handleUpdateStatus(booking.id, value)
+                          handleUpdateStatus({ bookingId: booking.id, newStatus: value })
                         }
-                        disabled={updatingStatus}
+                        disabled={!!updatingStatus}
                       >
                         <SelectTrigger className="w-full h-8">
                           <SelectValue placeholder="Update Status" />
@@ -211,7 +217,7 @@ export const TestDrivesList = () => {
                           <SelectItem value="NO_SHOW">No Show</SelectItem>
                         </SelectContent>
                       </Select>
-                    )}
+                    ) as unknown as null}
                   />
                 </div>
               ))}

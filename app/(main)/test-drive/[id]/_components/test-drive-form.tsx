@@ -53,11 +53,55 @@ const testDriveSchema = z.object({
   notes: z.string().optional(),
 });
 
-export function TestDriveForm({ car, testDriveInfo }) {
+interface TestDriveInfo {
+  dealership?: {
+    name?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    workingHours?: {
+      dayOfWeek: string;
+      isOpen: boolean;
+      openTime: string;
+      closeTime: string;
+    }[];
+  };
+  existingBookings?: {
+    date: string;
+    startTime: string;
+    endTime: string;
+  }[];
+}
+
+export function TestDriveForm({
+  car,
+  testDriveInfo,
+}: {
+  car: {
+    id: string;
+    year: number;
+    make: string;
+    model: string;
+    price: number;
+    mileage: number;
+    fuelType: string;
+    transmission: string;
+    bodyType: string;
+    color: string;
+    images?: string[];
+  };
+  testDriveInfo: TestDriveInfo;
+}) {
   const router = useRouter();
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<
+    { id: string; label: string; startTime: string; endTime: string }[]
+  >([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [bookingDetails, setBookingDetails] = useState(null);
+  const [bookingDetails, setBookingDetails] = useState<{
+    bookingDate: string;
+    timeSlot: string;
+    notes?: string;
+  } | null>(null);
 
   // Initialize react-hook-form with zod resolver
   const {
@@ -95,7 +139,9 @@ export function TestDriveForm({ car, testDriveInfo }) {
   useEffect(() => {
     if (bookingResult?.success) {
       setBookingDetails({
-        date: format(bookingResult?.data?.bookingDate, "EEEE, MMMM d, yyyy"),
+        bookingDate: bookingResult?.data?.bookingDate
+          ? format(bookingResult.data.bookingDate, "EEEE, MMMM d, yyyy")
+          : "Invalid Date",
         timeSlot: `${format(
           parseISO(`2022-01-01T${bookingResult?.data?.startTime}`),
           "h:mm a"
@@ -103,7 +149,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
           parseISO(`2022-01-01T${bookingResult?.data?.endTime}`),
           "h:mm a"
         )}`,
-        notes: bookingResult?.data?.notes,
+        notes: bookingResult?.data?.notes ?? undefined,
       });
       setShowConfirmation(true);
 
@@ -173,17 +219,24 @@ export function TestDriveForm({ car, testDriveInfo }) {
   }, [selectedDate]);
 
   // Create a function to determine which days should be disabled
-  const isDayDisabled = (day) => {
+  interface DaySchedule {
+    dayOfWeek: string;
+    isOpen: boolean;
+    openTime: string;
+    closeTime: string;
+  }
+
+  const isDayDisabled = (day: Date): boolean => {
     // Disable past dates
     if (day < new Date()) {
       return true;
     }
 
     // Get day of week
-    const dayOfWeek = format(day, "EEEE").toUpperCase();
+    const dayOfWeek: string = format(day, "EEEE").toUpperCase();
 
     // Find working hours for the day
-    const daySchedule = dealership?.workingHours?.find(
+    const daySchedule: DaySchedule | undefined = dealership?.workingHours?.find(
       (schedule) => schedule.dayOfWeek === dayOfWeek
     );
 
@@ -192,8 +245,21 @@ export function TestDriveForm({ car, testDriveInfo }) {
   };
 
   // Submit handler
-  const onSubmit = async (data) => {
-    const selectedSlot = availableTimeSlots.find(
+  interface FormData {
+    date: Date;
+    timeSlot: string;
+    notes?: string;
+  }
+
+  interface TimeSlot {
+    id: string;
+    label: string;
+    startTime: string;
+    endTime: string;
+  }
+
+  const onSubmit = async (data: FormData) => {
+    const selectedSlot: TimeSlot | undefined = availableTimeSlots.find(
       (slot) => slot.id === data.timeSlot
     );
 
@@ -420,7 +486,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={bookingInProgress}
+                disabled={!!bookingInProgress}
               >
                 {bookingInProgress ? (
                   <>
@@ -479,7 +545,7 @@ export function TestDriveForm({ car, testDriveInfo }) {
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Date:</span>
-                  <span>{bookingDetails.date}</span>
+                  <span>{bookingDetails.bookingDate}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Time Slot:</span>

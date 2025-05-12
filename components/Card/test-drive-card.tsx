@@ -17,18 +17,55 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+type CarType = {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  images?: string[];
+};
+
+type UserType = {
+  id: string;
+  name?: string;
+  email: string;
+};
+
+type BookingStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+
+type BookingType = {
+  id: string;
+  carId: string;
+  car: CarType;
+  bookingDate: string;
+  startTime: string;
+  endTime: string;
+  status: BookingStatus;
+  notes?: string;
+  user?: UserType;
+};
+
+interface TestDriveCardProps {
+  booking: BookingType | any ;
+  onCancel?: (bookingId: string) => Promise<void>;
+  showActions?: boolean;
+  isPast?: boolean;
+  isAdmin?: boolean;
+  isCancelling?: boolean | any;
+  renderStatusSelector?: () => React.ReactNode;
+}
+
 // Helper function to format time
-const formatTime = (timeString) => {
+const formatTime = (timeString: string): string => {
   try {
     return format(parseISO(`2022-01-01T${timeString}`), "h:mm a");
   } catch (error) {
-    console.log('error: ', error);
     return timeString;
   }
 };
 
 // Helper function for status badge
-const getStatusBadge = (status) => {
+const getStatusBadge = (status: BookingStatus): React.ReactNode => {
   switch (status) {
     case "PENDING":
       return <Badge className="bg-amber-100 text-amber-800">Pending</Badge>;
@@ -53,7 +90,7 @@ export function TestDriveCard({
   isAdmin = false,
   isCancelling = false,
   renderStatusSelector = () => null,
-}) {
+}: TestDriveCardProps) {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   // Handle cancel
@@ -138,7 +175,7 @@ export function TestDriveCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full my-2 sm:mb-0 cursor-pointer"
+                className="w-full my-2 sm:mb-0"
                 asChild
               >
                 <Link
@@ -154,7 +191,7 @@ export function TestDriveCard({
                 <Button
                   variant="destructive"
                   size="sm"
-                  className="w-full mt-2 cursor-pointer" 
+                  className="w-full"
                   onClick={() => setCancelDialogOpen(true)}
                   disabled={isCancelling}
                 >
@@ -209,14 +246,12 @@ export function TestDriveCard({
                 variant="outline"
                 onClick={() => setCancelDialogOpen(false)}
                 disabled={isCancelling}
-                className="cursor-pointer"
               >
                 Keep Reservation
               </Button>
               <Button
                 variant="destructive"
                 onClick={handleCancel}
-                className="cursor-pointer"
                 disabled={isCancelling}
               >
                 {isCancelling ? (

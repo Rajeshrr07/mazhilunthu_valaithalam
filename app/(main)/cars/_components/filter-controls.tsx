@@ -4,15 +4,49 @@ import { Check, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 
+interface CurrentFilters {
+  make: string;
+  bodyType: string;
+  fuelType: string;
+  transmission: string;
+  priceRange: [number, number];
+}
+
+interface CarFilterControlsProps {
+  filters: {
+    makes: string[];
+    bodyTypes: string[];
+    fuelTypes: string[];
+    transmissions: string[];
+    priceRange: { min: number; max: number };
+  };
+  currentFilters: CurrentFilters;
+  onFilterChange: (filterType: keyof CurrentFilters, value: any) => void;
+  onClearFilter: (filterType: keyof CurrentFilters) => void;
+}
+
 export const CarFilterControls = ({
   filters,
   currentFilters,
   onFilterChange,
   onClearFilter,
-}) => {
+}: CarFilterControlsProps) => {
   const { make, bodyType, fuelType, transmission, priceRange } = currentFilters;
 
-  const filterSections = [
+  interface FilterOption {
+    value: string;
+    label: string;
+  }
+
+  interface FilterSection {
+    id: keyof CurrentFilters;
+    title: string;
+    options: FilterOption[];
+    currentValue: string | [number, number];
+    onChange: (value: string | [number, number]) => void;
+  }
+
+  const filterSections: FilterSection[] = [
     {
       id: "make",
       title: "Make",

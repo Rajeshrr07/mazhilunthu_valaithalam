@@ -21,7 +21,11 @@ export default async function ReservationsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-6xl mb-6 gradient-title">Your Reservations</h1>
-      <ReservationsList initialData={reservationsResult} />
+      {reservationsResult.data ? (
+        <ReservationsList initialData={{ data: reservationsResult.data }} />
+      ) : (
+        <p>No reservations found.</p>
+      )}
     </div>
   );
 }

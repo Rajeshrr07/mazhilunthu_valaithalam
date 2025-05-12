@@ -73,9 +73,9 @@ export const SettingsForm = () => {
 
   const [userSearch, setUserSearch] = useState("");
   const [confirmAdminDialog, setConfirmAdminDialog] = useState(false);
-  const [userToPromote, setUserToPromote] = useState(null);
+  const [userToPromote, setUserToPromote] = useState<{ id: string; name?: string; email: string } | null>(null);
   const [confirmRemoveDialog, setConfirmRemoveDialog] = useState(false);
-  const [userToDemote, setUserToDemote] = useState(null);
+  const [userToDemote, setUserToDemote] = useState<{ id: string; name?: string; email: string } | null>(null);
 
   // Custom hooks for API calls
   const {
@@ -122,7 +122,7 @@ export const SettingsForm = () => {
         const mappedHours = DAYS.map((day) => {
           // Find matching working hour
           const hourData = dealership.workingHours.find(
-            (h) => h.dayOfWeek === day.value
+            (h:any) => h.dayOfWeek === day.value
           );
 
           if (hourData) {
@@ -183,7 +183,7 @@ export const SettingsForm = () => {
   }, [saveResult, updateRoleResult]);
 
   // Handle working hours change
-  const handleWorkingHourChange = (index, field, value) => {
+  const handleWorkingHourChange = (index:any, field:any, value:any) => {
     const updatedHours = [...workingHours];
     updatedHours[index] = {
       ...updatedHours[index],
@@ -212,7 +212,7 @@ export const SettingsForm = () => {
   // Filter users by search term
   const filteredUsers = usersData?.success
     ? usersData.data.filter(
-        (user) =>
+        (user:any) =>
           user.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
           user.email.toLowerCase().includes(userSearch.toLowerCase())
       )
@@ -316,7 +316,7 @@ export const SettingsForm = () => {
               </div>
 
               <div className="mt-6 flex justify-end">
-                <Button onClick={handleSaveHours} disabled={savingHours} className="cursor-pointer">
+                <Button onClick={handleSaveHours} disabled={!!savingHours} className="cursor-pointer">
                   {savingHours ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -370,7 +370,7 @@ export const SettingsForm = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.map((user) => (
+                      {filteredUsers.map((user:any) => (
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-2">
@@ -410,7 +410,7 @@ export const SettingsForm = () => {
                                   setUserToDemote(user);
                                   setConfirmRemoveDialog(true);
                                 }}
-                                disabled={updatingRole}
+                                disabled={updatingRole ?? false}
                               >
                                 <UserX className="h-4 w-4 mr-2" />
                                 Remove Admin
@@ -423,7 +423,7 @@ export const SettingsForm = () => {
                                   setUserToPromote(user);
                                   setConfirmAdminDialog(true);
                                 }}
-                                disabled={updatingRole}
+                                disabled={!!updatingRole}
                               >
                                 <Shield className="h-4 w-4 mr-2" />
                                 Make Admin
@@ -469,11 +469,11 @@ export const SettingsForm = () => {
                 <Button
                   variant="outline"
                   onClick={() => setConfirmAdminDialog(false)}
-                  disabled={updatingRole}
+                  disabled={!!updatingRole}
                 >
                   Cancel
                 </Button>
-                <Button onClick={handleMakeAdmin} disabled={updatingRole}>
+                <Button onClick={handleMakeAdmin} disabled={!!updatingRole}>
                   {updatingRole ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -508,14 +508,14 @@ export const SettingsForm = () => {
                 <Button
                   variant="outline"
                   onClick={() => setConfirmRemoveDialog(false)}
-                  disabled={updatingRole}
+                  disabled={!!updatingRole}
                 >
                   Cancel
                 </Button>
                 <Button
                   variant="destructive"
                   onClick={handleRemoveAdmin}
-                  disabled={updatingRole}
+                  disabled={!!updatingRole}
                 >
                   {updatingRole ? (
                     <>

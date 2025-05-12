@@ -12,8 +12,24 @@ import { toggleSavedCar } from "@/actions/car-listing";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import useFetch from "@/hooks/use-fetch";
+import { serializeCarData } from '@/lib/helper';
 
-const CarCard = ({ car }) => {
+interface Car {
+  id: string;
+  make: string;
+  model: string;
+  price: number;
+  year: number;
+  transmission: string;
+  fuelType: string;
+  bodyType: string;
+  mileage: number;
+  color: string;
+  images: string[];
+  wishlisted: boolean;
+}
+
+const CarCard = ({ car }: { car: any }) => {
   const { isSignedIn } = useAuth();
   const router = useRouter();
   const [isSaved, setIsSaved] = useState(car.wishlisted);
@@ -29,7 +45,7 @@ const CarCard = ({ car }) => {
   // Handle toggle result with useEffect
   useEffect(() => {
     if (toggleResult?.success && toggleResult.saved !== isSaved) {
-      setIsSaved(toggleResult.saved);
+      setIsSaved(toggleResult.saved ?? false);
       toast.success(toggleResult.message);
     }
   }, [toggleResult, isSaved]);
@@ -42,7 +58,7 @@ const CarCard = ({ car }) => {
   }, [toggleError]);
 
   // Handle save/unsave car
-  const handleToggleSave = async (e) => {
+  const handleToggleSave = async (e:any) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -85,7 +101,7 @@ const CarCard = ({ car }) => {
               : "text-gray-600 hover:text-gray-900"
           }`}
           onClick={handleToggleSave}
-          disabled={isToggling}
+          disabled={!!isToggling}
         >
           {isToggling ? (
             <Loader2 className="h-4 w-4 animate-spin" />

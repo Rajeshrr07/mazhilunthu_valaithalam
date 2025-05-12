@@ -8,10 +8,22 @@ function EmiCalculator({ price = 1000 }) {
   const [downPaymentPercent, setDownPaymentPercent] = useState(0);
   const [interestRate, setInterestRate] = useState(5);
   const [loanTenure, setLoanTenure] = useState(1);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<LoanCalculationResults | null>(null);
   const [error] = useState("");
 
-  const handleLoanAmountChange = (value) => {
+  interface LoanCalculationResults {
+    emi: string;
+    totalInterest: string;
+    totalPayment: string;
+    loanPrincipal: string;
+    downPayment: string;
+  }
+
+  interface EmiCalculatorProps {
+    price?: number;
+  }
+
+  const handleLoanAmountChange = (value: number): void => {
     const newLoanAmount = Math.min(Math.max(value, 1000), 150000);
     setLoanAmount(newLoanAmount);
     const newDownPayment = (downPaymentPercent / 100) * newLoanAmount;
@@ -19,8 +31,8 @@ function EmiCalculator({ price = 1000 }) {
     calculateLoan(newLoanAmount, newDownPayment, interestRate, loanTenure);
   };
 
-  const handleDownPaymentChange = (value) => {
-    const newDownPayment = Math.min(Math.max(value, 0), loanAmount);
+  const handleDownPaymentChange = (value: number): void => {
+    const newDownPayment: number = Math.min(Math.max(value, 0), loanAmount);
     setDownPayment(newDownPayment);
     setDownPaymentPercent((newDownPayment / loanAmount) * 100);
     calculateLoan(loanAmount, newDownPayment, interestRate, loanTenure);
@@ -34,33 +46,53 @@ function EmiCalculator({ price = 1000 }) {
   //   calculateLoan(loanAmount, newDownPayment, interestRate, loanTenure);
   // };
 
-  const handleInterestRateChange = (value) => {
-    const newRate = Math.min(Math.max(value, 0.1), 25);
+  const handleInterestRateChange = (value: number): void => {
+    const newRate: number = Math.min(Math.max(value, 0.1), 25);
     setInterestRate(newRate);
     calculateLoan(loanAmount, downPayment, newRate, loanTenure);
   };
 
-  const handleLoanTenureChange = (value) => {
-    const newTenure = Math.min(Math.max(value, 1), 8);
+  const handleLoanTenureChange = (value: number): void => {
+    const newTenure: number = Math.min(Math.max(value, 1), 8);
     setLoanTenure(newTenure);
     calculateLoan(loanAmount, downPayment, interestRate, newTenure);
   };
 
-  const calculateLoan = (principal, down, rate, years) => {
-    const loanPrincipal = principal - down;
+  interface LoanCalculationInputs {
+    principal: number;
+    down: number;
+    rate: number;
+    years: number;
+  }
+
+  interface LoanCalculationResults {
+    emi: string;
+    totalInterest: string;
+    totalPayment: string;
+    loanPrincipal: string;
+    downPayment: string;
+  }
+
+  const calculateLoan = (
+    principal: LoanCalculationInputs["principal"],
+    down: LoanCalculationInputs["down"],
+    rate: LoanCalculationInputs["rate"],
+    years: LoanCalculationInputs["years"]
+  ): void => {
+    const loanPrincipal: number = principal - down;
     if (loanPrincipal <= 0) {
       setResults(null);
       return;
     }
 
-    const monthlyRate = rate / 100 / 12;
-    const months = years * 12;
+    const monthlyRate: number = rate / 100 / 12;
+    const months: number = years * 12;
 
-    const emi =
+    const emi: number =
       (loanPrincipal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
       (Math.pow(1 + monthlyRate, months) - 1);
-    const totalPayment = emi * months;
-    const totalInterest = totalPayment - loanPrincipal;
+    const totalPayment: number = emi * months;
+    const totalInterest: number = totalPayment - loanPrincipal;
 
     setResults({
       emi: emi.toFixed(2),
@@ -75,7 +107,7 @@ function EmiCalculator({ price = 1000 }) {
     calculateLoan(loanAmount, downPayment, interestRate, loanTenure);
   }, []);
 
-  const formatNumber = (num) => {
+  const formatNumber = (num:any) => {
     return new Intl.NumberFormat("en-US").format(num);
   };
 
