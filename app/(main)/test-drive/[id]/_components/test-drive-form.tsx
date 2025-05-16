@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { useForm, Controller } from "react-hook-form";
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { Calendar } from "@/components/ui/calendar";
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -41,6 +41,7 @@ import { bookTestDrive } from "@/actions/test-drive";
 import { toast } from "sonner";
 import useFetch from "@/hooks/use-fetch";
 import "react-calendar/dist/Calendar.css";
+import Image from "next/image";
 
 // Define Zod schema for form validation
 const testDriveSchema = z.object({
@@ -122,7 +123,10 @@ export function TestDriveForm({
 
   // Get dealership and booking information
   const dealership = testDriveInfo?.dealership;
-  const existingBookings = testDriveInfo?.existingBookings || [];
+  const existingBookings = useMemo(
+    () => testDriveInfo?.existingBookings || [],
+    [testDriveInfo?.existingBookings]
+  );
 
   // Watch date field to update available time slots
   const selectedDate = watch("date");
@@ -216,7 +220,7 @@ export function TestDriveForm({
 
     // Clear time slot selection when date changes
     setValue("timeSlot", "");
-  }, [selectedDate]);
+  }, [selectedDate, dealership, existingBookings, setValue]);
 
   // Create a function to determine which days should be disabled
   interface DaySchedule {
@@ -293,7 +297,7 @@ export function TestDriveForm({
 
             <div className="aspect-video rounded-lg overflow-hidden relative mb-4">
               {car.images && car.images.length > 0 ? (
-                <img
+                <Image
                   src={car.images[0]}
                   alt={`${car.year} ${car.make} ${car.model}`}
                   className="object-cover w-full h-full"
@@ -503,19 +507,19 @@ export function TestDriveForm({
             <div className="mt-8 bg-gray-50 p-4 rounded-lg">
               <h3 className="font-medium mb-2">What to expect</h3>
               <ul className="space-y-2 text-sm text-gray-600">
-  <li className="flex items-start">
-    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-    Bring your driver&apos;s license for verification
-  </li>
-  <li className="flex items-start">
-    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-    Test drives typically last 30-60 minutes
-  </li>
-  <li className="flex items-start">
-    <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-    A dealership representative will accompany you
-  </li>
-</ul>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+                  Bring your driver&apos;s license for verification
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+                  Test drives typically last 30-60 minutes
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
+                  A dealership representative will accompany you
+                </li>
+              </ul>
             </div>
           </CardContent>
         </Card>
@@ -558,8 +562,8 @@ export function TestDriveForm({
               </div>
 
               <div className="mt-4 bg-blue-50 p-3 rounded text-sm text-blue-700">
-  Please arrive 10 minutes early with your driver&apos;s license.
-</div>
+                Please arrive 10 minutes early with your driver&apos;s license.
+              </div>
             </div>
           )}
 
