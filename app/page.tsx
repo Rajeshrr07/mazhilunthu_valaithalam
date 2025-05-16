@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/accordion";
 import { SignedOut } from "@clerk/nextjs";
 import { getFeaturedCars } from "@/actions/home";
-import CarCard  from "@/components/Card/car-card";
-import  HomeSearch  from "@/components/Home/home-search";
+import CarCard from "@/components/Card/car-card";
+import HomeSearch from "@/components/Home/home-search";
 import Link from "next/link";
 import Image from "next/image";
 import { bodyTypes, carMakes, faqItems } from "@/lib/data";
@@ -48,8 +48,11 @@ export default async function Home() {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCars.map((car) => (
-              <CarCard key={car.id} car={car} />
+            {featuredCars.map((car, idx) => (
+              <CarCard
+                key={car.id ?? idx}
+                car={{ id: car.id ?? String(idx), ...car }}
+              />
             ))}
           </div>
         </div>
@@ -75,9 +78,7 @@ export default async function Home() {
               >
                 <div className="h-16 w-auto mx-auto mb-2 relative">
                   <Image
-                    src={
-                      make.image || `/make/${make.name.toLowerCase()}.webp`
-                    }
+                    src={make.image || `/make/${make.name.toLowerCase()}.webp`}
                     alt={make.name}
                     fill
                     style={{ objectFit: "contain" }}
@@ -150,9 +151,7 @@ export default async function Home() {
               >
                 <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative">
                   <Image
-                    src={
-                      type.image || `/body/${type.name.toLowerCase()}.webp`
-                    }
+                    src={type.image || `/body/${type.name.toLowerCase()}.webp`}
                     alt={type.name}
                     fill
                     className="object-cover group-hover:scale-105 transition duration-300"

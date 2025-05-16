@@ -33,6 +33,10 @@ export const checkUser = async () => {
 
     return newUser;
   } catch (error) {
-    console.log("Error:", error.message);
+    if (error instanceof Error) {
+      console.log("Error:", error.message);
+    } else {
+      console.log("Error:", error);
+    }
   }
 };

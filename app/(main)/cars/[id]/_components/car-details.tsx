@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@clerk/nextjs";
-import {  Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import {
   Car,
   Fuel,
@@ -290,7 +290,7 @@ export function CarDetails({ car, testDriveInfo }: CarDetailsProps) {
                 about this vehicle.
               </p>
               <a href="mailto:help@vehiql.in">
-                <Button variant="outline" className="w-full cursor-pointer" >
+                <Button variant="outline" className="w-full cursor-pointer">
                   Request Info
                 </Button>
               </a>
