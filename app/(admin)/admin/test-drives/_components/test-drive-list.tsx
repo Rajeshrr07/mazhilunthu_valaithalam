@@ -119,7 +119,7 @@ export const TestDrivesList = () => {
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="ALL">All Statuses</SelectItem>
                 <SelectItem value="PENDING">Pending</SelectItem>
                 <SelectItem value="CONFIRMED">Confirmed</SelectItem>
                 <SelectItem value="COMPLETED">Completed</SelectItem>
@@ -141,7 +141,7 @@ export const TestDrivesList = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <Button type="submit" className="ml-2">
+            <Button type="submit" className="ml-2 cursor-pointer">
               Search
             </Button>
           </form>

@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/accordion";
 import { SignedOut } from "@clerk/nextjs";
 import { getFeaturedCars } from "@/actions/home";
-import CarCard  from "@/components/Card/car-card";
-import  HomeSearch  from "@/components/Home/home-search";
+import CarCard from "@/components/Card/car-card";
+import HomeSearch from "@/components/Home/home-search";
 import Link from "next/link";
 import Image from "next/image";
 import { bodyTypes, carMakes, faqItems } from "@/lib/data";
@@ -75,9 +75,7 @@ export default async function Home() {
               >
                 <div className="h-16 w-auto mx-auto mb-2 relative">
                   <Image
-                    src={
-                      make.image || `/make/${make.name.toLowerCase()}.webp`
-                    }
+                    src={make.image || `/make/${make.name.toLowerCase()}.webp`}
                     alt={make.name}
                     fill
                     style={{ objectFit: "contain" }}
@@ -150,9 +148,7 @@ export default async function Home() {
               >
                 <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative">
                   <Image
-                    src={
-                      type.image || `/body/${type.name.toLowerCase()}.webp`
-                    }
+                    src={type.image || `/body/${type.name.toLowerCase()}.webp`}
                     alt={type.name}
                     fill
                     className="object-cover group-hover:scale-105 transition duration-300"
@@ -175,10 +171,12 @@ export default async function Home() {
           <h2 className="text-2xl font-bold text-center mb-8">
             Frequently Asked Questions
           </h2>
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full ">
             {faqItems.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
+                <AccordionTrigger className="!cursor-pointer">
+                  {faq.question}
+                </AccordionTrigger>
                 <AccordionContent>{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}

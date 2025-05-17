@@ -292,7 +292,7 @@ export const SettingsForm = () => {
                       <>
                         <div className="col-span-5 md:col-span-4">
                           <div className="flex items-center">
-                            <Clock className="h-4 w-4 text-gray-400 mr-2" />
+                            <Clock className="h-4 w-4 text-gray-400 mr-2 !cursor-pointer" />
                             <Input
                               type="time"
                               value={workingHours[index]?.openTime}
@@ -303,7 +303,7 @@ export const SettingsForm = () => {
                                   e.target.value
                                 )
                               }
-                              className="text-sm"
+                              className="text-sm cursor-pointer"
                             />
                           </div>
                         </div>
@@ -321,7 +321,7 @@ export const SettingsForm = () => {
                                 e.target.value
                               )
                             }
-                            className="text-sm"
+                            className="text-sm cursor-pointer"
                           />
                         </div>
                       </>

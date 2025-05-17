@@ -168,7 +168,7 @@ export function TestDriveCard({
 
           {/* Action Buttons - Right */}
           {showActions && (
-            <div className="p-4 border-t sm:border-t-0 sm:border-l sm:w-1/4 sm:flex sm:flex-col sm:justify-center sm:items-center sm:space-y-2">
+            <div className="p-4 border-t sm:border-t-0 sm:border-l sm:w-1/4 sm:flex sm:flex-col sm:justify-center sm:items-center sm:space-y-2 space-y-2 ">
               {/* Show notes if any */}
               {booking.notes && (
                 <div className="bg-gray-50 p-2 rounded text-sm w-full">
@@ -180,7 +180,7 @@ export function TestDriveCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full my-2 sm:mb-0"
+                className="w-full my-2 sm:mb-0 cursor-pointer"
                 asChild
               >
                 <Link
@@ -196,7 +196,7 @@ export function TestDriveCard({
                 <Button
                   variant="destructive"
                   size="sm"
-                  className="w-full"
+                  className="w-full cursor-pointer mt-2"
                   onClick={() => setCancelDialogOpen(true)}
                   disabled={isCancelling}
                 >
@@ -251,6 +251,7 @@ export function TestDriveCard({
                 variant="outline"
                 onClick={() => setCancelDialogOpen(false)}
                 disabled={isCancelling}
+                className="cursor-pointer"
               >
                 Keep Reservation
               </Button>
@@ -258,6 +259,7 @@ export function TestDriveCard({
                 variant="destructive"
                 onClick={handleCancel}
                 disabled={isCancelling}
+                className="cursor-pointer"
               >
                 {isCancelling ? (
                   <>

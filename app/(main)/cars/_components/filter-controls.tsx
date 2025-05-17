@@ -93,6 +93,7 @@ export const CarFilterControls = ({
             min={filters.priceRange.min}
             max={filters.priceRange.max}
             step={100}
+            className="cursor-pointer"
             value={priceRange}
             onValueChange={(value) => {
               if (value.length === 2) {
@@ -104,8 +105,8 @@ export const CarFilterControls = ({
             }}
           />
         </div>
-        <div className="flex items-center justify-between">
-          <div className="font-medium text-sm">$ {priceRange[0]}</div>
+        <div className="flex items-center justify-between ">
+          <div className="font-medium text-sm ">$ {priceRange[0]}</div>
           <div className="font-medium text-sm">$ {priceRange[1]}</div>
         </div>
       </div>
@@ -117,7 +118,7 @@ export const CarFilterControls = ({
             <span>{section.title}</span>
             {section.currentValue && (
               <button
-                className="text-xs text-gray-600 flex items-center"
+                className="text-xs text-gray-600 flex items-center cursor-pointer"
                 onClick={() => onClearFilter(section.id)}
               >
                 <X className="mr-1 h-3 w-3" />

@@ -139,7 +139,10 @@ const HomeSearch = () => {
             />
           </div>
 
-          <Button type="submit" className="absolute right-2 rounded-full">
+          <Button
+            type="submit"
+            className="absolute right-2 rounded-full cursor-pointer"
+          >
             Search
           </Button>
         </div>
@@ -163,6 +166,7 @@ const HomeSearch = () => {
                       setImagePreview("");
                       toast.info("Image removed");
                     }}
+                    className="cursor-pointer"
                   >
                     Remove Image
                   </Button>
@@ -191,7 +195,7 @@ const HomeSearch = () => {
             {imagePreview && (
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full cursor-pointer"
                 disabled={!!isUploading || !!isProcessing}
               >
                 {isUploading
