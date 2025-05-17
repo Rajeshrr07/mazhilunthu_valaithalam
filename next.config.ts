@@ -9,6 +9,7 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsHmrCache: false, // defaults to true
+    optimizeCss: false, 
   },
   images: {
     remotePatterns: [
