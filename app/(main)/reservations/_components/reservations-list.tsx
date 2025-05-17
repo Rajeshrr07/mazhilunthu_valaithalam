@@ -12,7 +12,6 @@ interface Booking {
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
   carId: string;
   car: {
-    id: string;
     make: string;
     model: string;
     year: number;

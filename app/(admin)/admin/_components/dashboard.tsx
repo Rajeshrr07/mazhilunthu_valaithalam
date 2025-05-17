@@ -15,37 +15,14 @@ import {
   DollarSign,
 } from "lucide-react";
 
-// interface DashboardData {
-//   success: boolean;
-//   error?: string;
-//   data: {
-//     cars: {
-//       total: number;
-//       available: number;
-//       sold: number;
-//     };
-//     testDrives: {
-//       total: number;
-//       pending: number;
-//       confirmed: number;
-//       completed: number;
-//       cancelled: number;
-//       noShow: number;
-//       conversionRate: number;
-//     };
-//   };
-// }
-
 interface DashboardData {
   success: boolean;
   error?: string;
-  data?: {
+  data: {
     cars: {
       total: number;
       available: number;
       sold: number;
-      unavailable?: number; // optional if you want
-      featured?: number; // optional if you want
     };
     testDrives: {
       total: number;
@@ -73,9 +50,6 @@ export function Dashboard({ initialData }: { initialData: DashboardData }) {
         </AlertDescription>
       </Alert>
     );
-  }
-  if (!initialData.data) {
-    return <div>No data available</div>;
   }
 
   const { cars, testDrives } = initialData.data;

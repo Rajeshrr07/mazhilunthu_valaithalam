@@ -21,16 +21,7 @@ export default async function SavedCarsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-6xl mb-6 gradient-title">Your Saved Cars</h1>
-      <SavedCarsList
-        initialData={{
-          ...savedCarsResult,
-          data: (savedCarsResult.data ?? []).map((car) => ({
-            ...car,
-            id: String(car.id ?? ""),
-            wishlisted: car.wishlisted ? 1 : 0, // Ensures compatibility with string | number
-          })),
-        }}
-      />
+      <SavedCarsList initialData={savedCarsResult} />
     </div>
   );
 }
