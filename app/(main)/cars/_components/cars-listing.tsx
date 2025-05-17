@@ -21,6 +21,26 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+// Define types for the car data
+interface Car {
+  id: string;
+  // Add other car properties here based on your actual data structure
+  [key: string]: string | number;
+}
+
+interface PaginationData {
+  total: number;
+  pages: number;
+  page: number;
+  limit: number;
+}
+
+interface ApiResponse {
+  success: boolean;
+  data: Car[];
+  pagination: PaginationData;
+}
+
 export function CarListings() {
   const searchParams = useSearchParams();
   const router = useRouter();

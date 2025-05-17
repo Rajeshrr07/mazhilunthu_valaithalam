@@ -70,21 +70,19 @@ export const CarsList = () => {
 
   // State for search and dialogs
   const [search, setSearch] = useState<string>("");
-  // Fix for deleteDialogOpen state
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean | undefined>(
-    false
-  );
+// Fix for deleteDialogOpen state
+const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean | undefined>(false);
 
-  // Fix for carToDelete state
-  const [carToDelete, setCarToDelete] = useState<Car | null>(null);
+// Fix for carToDelete state
+const [carToDelete, setCarToDelete] = useState<Car | null>(null);
 
   // Custom hooks for API calls
-  const {
-    loading: loadingCars,
-    fn: fetchCars,
-    data: carsData,
-    error: carsError,
-  } = useFetch(getCars);
+const {
+  loading: loadingCars,
+  fn: fetchCars,
+  data: carsData,
+  error: carsError,
+} = useFetch(getCars);
 
   const {
     loading: deletingCar,
@@ -103,7 +101,7 @@ export const CarsList = () => {
   // Initial fetch and refetch on search changes
   useEffect(() => {
     fetchCars(search);
-  }, [fetchCars, search]);
+  }, [search]);
 
   // Handle errors
   useEffect(() => {
@@ -118,7 +116,7 @@ export const CarsList = () => {
     if (updateError) {
       toast.error("Failed to update car");
     }
-  }, [carsError, deleteError, fetchCars, updateError]);
+  }, [carsError, deleteError, updateError]);
 
   // Handle successful operations
   useEffect(() => {
@@ -131,7 +129,7 @@ export const CarsList = () => {
       toast.success("Car updated successfully");
       fetchCars(search);
     }
-  }, [deleteResult, updateResult, fetchCars, search]);
+  }, [deleteResult, updateResult]);
 
   // Handle search submit
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -9,11 +9,7 @@ export async function generateMetadata() {
   };
 }
 
-export default async function TestDrivePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function TestDrivePage({ params }: { params: { id: string } }) {
   // Fetch car details
   const { id } = params;
   const result = await getCarById(id);

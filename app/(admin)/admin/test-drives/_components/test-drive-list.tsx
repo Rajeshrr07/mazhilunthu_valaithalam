@@ -25,39 +25,6 @@ import useFetch from "@/hooks/use-fetch";
 import { getAdminTestDrives, updateTestDriveStatus } from "@/actions/admin";
 import { cancelTestDrive } from "@/actions/test-drive";
 
-type CarType = {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  images?: string[];
-};
-
-type UserType = {
-  id: string;
-  name?: string;
-  email: string;
-};
-
-type BookingStatus =
-  | "PENDING"
-  | "CONFIRMED"
-  | "COMPLETED"
-  | "CANCELLED"
-  | "NO_SHOW";
-
-type BookingType = {
-  id: string;
-  carId: string;
-  car: CarType;
-  bookingDate: string;
-  startTime: string;
-  endTime: string;
-  status: BookingStatus;
-  notes?: string;
-  user?: UserType;
-};
-
 export const TestDrivesList = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -87,7 +54,7 @@ export const TestDrivesList = () => {
   // Initial fetch and refetch on search/filter changes
   useEffect(() => {
     fetchTestDrives({ search, status: statusFilter });
-  }, [search, statusFilter, fetchTestDrives]);
+  }, [search, statusFilter]);
 
   // Handle errors
   useEffect(() => {
@@ -112,7 +79,7 @@ export const TestDrivesList = () => {
       toast.success("Test drive cancelled successfully");
       fetchTestDrives({ search, status: statusFilter });
     }
-  }, [updateResult, cancelResult, fetchTestDrives, search, statusFilter]);
+  }, [updateResult, cancelResult]);
 
   // Handle search submit
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -220,45 +187,53 @@ export const TestDrivesList = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {testDrivesData?.data?.map((booking: BookingType) => (
-                <div key={booking.id} className="relative">
-                  <TestDriveCard
-                    booking={booking}
-                    onCancel={handleCancel}
-                    showActions={["PENDING", "CONFIRMED"].includes(
-                      booking.status
-                    )}
-                    isAdmin={true}
-                    isCancelling={cancelling ?? false}
-                    // Removed cancelError as it is not defined in TestDriveCard props
-                    renderStatusSelector={() =>
-                      (
-                        <Select
-                          value={booking.status}
-                          onValueChange={(value) =>
-                            handleUpdateStatus({
-                              bookingId: booking.id,
-                              newStatus: value,
-                            })
-                          }
-                          disabled={!!updatingStatus}
-                        >
-                          <SelectTrigger className="w-full h-8">
-                            <SelectValue placeholder="Update Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="PENDING">Pending</SelectItem>
-                            <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                            <SelectItem value="COMPLETED">Completed</SelectItem>
-                            <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                            <SelectItem value="NO_SHOW">No Show</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ) as unknown as null
-                    }
-                  />
-                </div>
-              ))}
+              {testDrivesData?.data?.map(
+                (booking: { id: string; status: string }) => (
+                  <div key={booking.id} className="relative">
+                    <TestDriveCard
+                      booking={booking}
+                      onCancel={handleCancel}
+                      showActions={["PENDING", "CONFIRMED"].includes(
+                        booking.status
+                      )}
+                      isAdmin={true}
+                      isCancelling={cancelling ?? false}
+                      // Removed cancelError as it is not defined in TestDriveCard props
+                      renderStatusSelector={() =>
+                        (
+                          <Select
+                            value={booking.status}
+                            onValueChange={(value) =>
+                              handleUpdateStatus({
+                                bookingId: booking.id,
+                                newStatus: value,
+                              })
+                            }
+                            disabled={!!updatingStatus}
+                          >
+                            <SelectTrigger className="w-full h-8">
+                              <SelectValue placeholder="Update Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="PENDING">Pending</SelectItem>
+                              <SelectItem value="CONFIRMED">
+                                Confirmed
+                              </SelectItem>
+                              <SelectItem value="COMPLETED">
+                                Completed
+                              </SelectItem>
+                              <SelectItem value="CANCELLED">
+                                Cancelled
+                              </SelectItem>
+                              <SelectItem value="NO_SHOW">No Show</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) as unknown as null
+                      }
+                    />
+                  </div>
+                )
+              )}
             </div>
           )}
         </CardContent>

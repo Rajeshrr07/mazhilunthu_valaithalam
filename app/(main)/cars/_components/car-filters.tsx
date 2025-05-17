@@ -23,14 +23,11 @@ import {
 } from "@/components/ui/select";
 
 interface Filters {
-  makes: string[];
-  bodyTypes: string[];
-  fuelTypes: string[];
-  transmissions: string[];
   priceRange: {
     min: number;
     max: number;
   };
+  // Add other filter properties here if needed
 }
 
 export const CarFilters = ({ filters }: { filters: Filters }) => {
@@ -56,7 +53,7 @@ export const CarFilters = ({ filters }: { filters: Filters }) => {
   const [bodyType, setBodyType] = useState(currentBodyType);
   const [fuelType, setFuelType] = useState(currentFuelType);
   const [transmission, setTransmission] = useState(currentTransmission);
-  const [priceRange, setPriceRange] = useState<[number, number]>([
+  const [priceRange, setPriceRange] = useState([
     currentMinPrice,
     currentMaxPrice,
   ]);
@@ -127,24 +124,15 @@ export const CarFilters = ({ filters }: { filters: Filters }) => {
     searchParams,
     filters.priceRange.min,
     filters.priceRange.max,
-    router,
   ]);
 
   // Handle filter changes
   interface FilterChangeHandler {
-    filterName:
-      | "make"
-      | "bodyType"
-      | "fuelType"
-      | "transmission"
-      | "priceRange";
+    filterName: "make" | "bodyType" | "fuelType" | "transmission" | "priceRange";
     value: string | number[];
   }
 
-  const handleFilterChange = (
-    filterName: FilterChangeHandler["filterName"],
-    value: FilterChangeHandler["value"]
-  ) => {
+  const handleFilterChange = (filterName: FilterChangeHandler["filterName"], value: FilterChangeHandler["value"]) => {
     switch (filterName) {
       case "make":
         setMake(value as string);
@@ -159,7 +147,7 @@ export const CarFilters = ({ filters }: { filters: Filters }) => {
         setTransmission(value as string);
         break;
       case "priceRange":
-        setPriceRange(value as [number, number]);
+        setPriceRange(value as number[]);
         break;
     }
   };
