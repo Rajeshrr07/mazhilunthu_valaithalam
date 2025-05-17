@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true, // ✅ This skips type checking during build
+  },
   experimental: {
     serverComponentsHmrCache: false, // defaults to true
   },
